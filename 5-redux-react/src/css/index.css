@@ -1,0 +1,16 @@
+body {
+	margin: 20px;
+	padding: 20px;
+	font-family: sans-serif;
+}
+
+.container-fluid {
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-right: 15px;
+	margin-left: 15px;
+}
+
+.top-buffer {
+	margin-top: 20px;
+}

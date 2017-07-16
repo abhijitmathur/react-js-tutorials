@@ -1,0 +1,5 @@
+export const SET_START_DATE = 'SET_START_DATE'
+export const SET_END_DATE = 'SET_END_DATE'
+export const ALL_AGENCIES_DATA = 'ALL_AGENCIES_DATA'
+export const RECEIVED_ERROR = 'RECEIVED_ERROR'
+export const FETCHING_DATA = 'FETCHING_DATA'
