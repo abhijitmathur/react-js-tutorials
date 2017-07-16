@@ -4,12 +4,17 @@ import ReactDOM from "react-dom";
 import { fetchUser } from "../actions/userActions";
 import { fetchTweets } from "../actions/tweetsActions";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+
 import {
   setStartDate,
   setEndDate,
-  queryAllAgencies
+  setAgencyID,
+  queryAllAgencies,
+  queryByAgency
 } from "../actions/billingActions";
+
 import { FormGroup, ControlLabel, FormControl, Button } from "react-bootstrap";
+import * as types from "../constants/type";
 
 const options = {
   page: 1, // which page you want to show as default
@@ -48,6 +53,8 @@ export default class Layout extends React.Component {
     this.handleQueryAllAgencies = this.handleQueryAllAgencies.bind(this);
     this.renderRelevantData = this.renderRelevantData.bind(this);
     this.renderAllAgencies = this.renderAllAgencies.bind(this);
+    this.handleAgencyID = this.handleAgencyID.bind(this);
+    this.handleQueryByAgencyID = this.handleQueryByAgencyID.bind(this);
   }
 
   handleStartDate(e) {
@@ -56,6 +63,11 @@ export default class Layout extends React.Component {
 
   handleEndDate(e) {
     this.props.dispatch(setEndDate(e.target.value));
+  }
+
+  handleAgencyID(e) {
+    // console.log(e.target.value);
+    this.props.dispatch(setAgencyID(e.target.value));
   }
 
   handleQueryAllAgencies() {
@@ -68,13 +80,93 @@ export default class Layout extends React.Component {
     this.props.dispatch(queryAllAgencies(url));
   }
 
+  handleQueryByAgencyID() {
+    var url =
+      "http://localhost:8080/billing/agency/" +
+      this.props.data.agencyID +
+      "?start=" +
+      this.props.data.startDate +
+      "&end=" +
+      this.props.data.endDate;
+
+    this.props.dispatch(queryByAgency(url));
+  }
+
   componentWillMount() {
     this.props.dispatch(fetchUser());
   }
 
   renderRelevantData() {
-    // return (<div>Hello Data </div>);
-    return this.renderAllAgencies();
+    switch (this.props.data.dataType) {
+      case types.ALL_AGENCIES_DATA:
+        return this.renderAllAgencies();
+      case types.SINGLE_AGENCY_DATA:
+        return this.renderByAgency();
+      default:
+        return <div />;
+    }
+  }
+
+  renderByAgency() {
+    return (
+      <div>
+        <div class="row top-buffer">
+          <BootstrapTable
+            data={this.props.data.allAgencyData}
+            pagination={true}
+            exportCSV={false}
+            options={options}
+          >
+            <TableHeaderColumn dataField="key" isKey={true} hidden={true}>
+              Key
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="ForwardedMedia">
+              Forwarded Media
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="MediaExportName">
+              Media Export Name
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="PO#/Job#">
+              PO
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="created">
+              Created
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="departmentname">
+              Dept
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="isci">
+              ISCI
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="length">
+              Length
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="mediaid">
+              Media ID
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="medianame">
+              Media Name
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="mediatypename">
+              Media Type Name
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="productname">
+              Product Name
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="recallstatus">
+              Recall Status
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="sentBy">
+              Sent By
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="submittername">
+              Submitter Name
+            </TableHeaderColumn>
+          </BootstrapTable>
+
+        </div>
+      </div>
+    );
   }
 
   renderAllAgencies() {
@@ -145,35 +237,50 @@ export default class Layout extends React.Component {
 
   render() {
     return (
-      <div class="container-fluid">
+      <div class="container">
         <div class="row">
           <div class="col-sm-4">
             <form class="row top-buffer">
               <FormGroup>
                 <div class="row top-buffer">
-                  <ControlLabel class="col-sm-1">StartDate</ControlLabel>
                   <FormControl
                     class="col-sm-3"
                     type="text"
-                    placeholder="YYYY-MM-DD"
+                    placeholder="Start Date in YYYY-MM-DD"
                     onChange={this.handleStartDate}
                   />
                 </div>
                 <div class="row top-buffer">
-                  <ControlLabel class="col-sm-1">EndDate</ControlLabel>
                   <FormControl
                     class="col-sm-3"
                     type="text"
-                    placeholder="YYYY-MM-DD"
+                    placeholder="End Date in YYYY-MM-DD"
                     onChange={this.handleEndDate}
                   />
                 </div>
-                <Button
-                  class="row top-buffer"
-                  onClick={this.handleQueryAllAgencies}
-                >
-                  All Agencies
-                </Button>
+                <div class="row top-buffer">
+                  <FormControl
+                    class="col-sm-3"
+                    type="text"
+                    placeholder="Agency ID"
+                    onChange={this.handleAgencyID}
+                  />
+                </div>
+                <div class="row top-buffer">
+                  <span>
+                    <div class="col-sm-2">
+                      <Button onClick={this.handleQueryAllAgencies}>
+                        All Agencies
+                      </Button>
+                    </div>
+                    <div class="col-sm-1" />
+                    <div class="col-sm-2">
+                      <Button onClick={this.handleQueryByAgencyID}>
+                        By Agency
+                      </Button>
+                    </div>
+                  </span>
+                </div>
               </FormGroup>
             </form>
           </div>

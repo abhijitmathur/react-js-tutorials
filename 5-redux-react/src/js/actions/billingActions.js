@@ -15,13 +15,40 @@ export function setEndDate(date) {
   };
 }
 
+export function setAgencyID(agencyID) {
+  return {
+    type: action.SET_AGENCY_ID,
+    payload: agencyID
+  };
+}
+
 export function queryAllAgencies(url) {
   return function(dispatch) {
     dispatch({ type: action.FETCHING_DATA });
     axios
       .get(url)
       .then(response => {
-        dispatch({ type: action.ALL_AGENCIES_DATA, payload: response.data.items });
+        dispatch({
+          type: action.ALL_AGENCIES_DATA,
+          payload: response.data.items
+        });
+      })
+      .catch(error => {
+        dispatch({ type: action.RECEIVED_ERROR, payload: error });
+      });
+  };
+}
+
+export function queryByAgency(url) {
+  return function(dispatch) {
+    dispatch({ type: action.FETCHING_DATA });
+    axios
+      .get(url)
+      .then(response => {
+        dispatch({
+          type: action.SINGLE_AGENCY_DATA,
+          payload: response.data.items
+        });
       })
       .catch(error => {
         dispatch({ type: action.RECEIVED_ERROR, payload: error });
