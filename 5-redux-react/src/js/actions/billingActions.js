@@ -29,6 +29,13 @@ export function setUserID(userID) {
   };
 }
 
+export function setSubmitterID(submitterID) {
+  return {
+    type: action.SET_SUBMITTER_ID,
+    payload: submitterID
+  };
+}
+
 export function queryAllAgencies(url) {
   return function(dispatch) {
     dispatch({ type: action.FETCHING_DATA });
@@ -71,6 +78,23 @@ export function queryByUser(url) {
       .then(response => {
         dispatch({
           type: action.SINGLE_USER_DATA,
+          payload: response.data.items
+        });
+      })
+      .catch(error => {
+        dispatch({ type: action.RECEIVED_ERROR, payload: error });
+      });
+  };
+}
+
+export function queryBySubmitterID(url) {
+  return function(dispatch) {
+    dispatch({ type: action.FETCHING_DATA });
+    axios
+      .get(url)
+      .then(response => {
+        dispatch({
+          type: action.SUBMITTER_ID_DATA,
           payload: response.data.items
         });
       })

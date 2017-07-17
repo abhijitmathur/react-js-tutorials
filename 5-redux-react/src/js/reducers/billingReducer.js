@@ -6,6 +6,7 @@ export default function reducer(
     endDate: "",
     agencyID: "",
     userID: "",
+    submitterID: "",
     allAgencyData: [],
     dataType: "",
     error: ""
@@ -29,6 +30,10 @@ export default function reducer(
       return { ...state, userID: action.payload };
     }
 
+    case types.SET_SUBMITTER_ID: {
+      return { ...state, submitterID: action.payload };
+    }
+
     case types.ALL_AGENCIES_DATA: {
       return {
         ...state,
@@ -50,6 +55,14 @@ export default function reducer(
         ...state,
         allAgencyData: action.payload,
         dataType: types.SINGLE_USER_DATA
+      };
+    }
+
+    case types.SUBMITTER_ID_DATA: {
+      return {
+        ...state,
+        allAgencyData: action.payload,
+        dataType: types.SUBMITTER_ID_DATA
       };
     }
 

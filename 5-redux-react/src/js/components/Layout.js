@@ -10,9 +10,11 @@ import {
   setEndDate,
   setAgencyID,
   setUserID,
+  setSubmitterID,
   queryAllAgencies,
   queryByAgency,
-  queryByUser
+  queryByUser,
+  queryBySubmitterID
 } from "../actions/billingActions";
 
 import {
@@ -56,19 +58,22 @@ const options = {
 export default class Layout extends React.Component {
   constructor(props) {
     super(props);
+
     this.handleStartDate = this.handleStartDate.bind(this);
     this.handleEndDate = this.handleEndDate.bind(this);
-    
+
     this.handleAgencyID = this.handleAgencyID.bind(this);
     this.handleUserID = this.handleUserID.bind(this);
+    this.handleSubmitterID = this.handleSubmitterID.bind(this);
 
     this.handleQueryAllAgencies = this.handleQueryAllAgencies.bind(this);
-    
+
     this.renderRelevantData = this.renderRelevantData.bind(this);
     this.renderAllAgencies = this.renderAllAgencies.bind(this);
-    
+
     this.handleQueryByAgencyID = this.handleQueryByAgencyID.bind(this);
     this.handleQueryByUserID = this.handleQueryByUserID.bind(this);
+    this.handleQueryBySubmitterID = this.handleQueryBySubmitterID.bind(this);
   }
 
   handleStartDate(e) {
@@ -85,6 +90,10 @@ export default class Layout extends React.Component {
 
   handleUserID(e) {
     this.props.dispatch(setUserID(e.target.value));
+  }
+
+  handleSubmitterID(e) {
+    this.props.dispatch(setSubmitterID(e.target.value));
   }
 
   handleQueryAllAgencies() {
@@ -121,6 +130,18 @@ export default class Layout extends React.Component {
     this.props.dispatch(queryByUser(url));
   }
 
+  handleQueryBySubmitterID() {
+    var url =
+      "http://localhost:8080/billing/submitter?id=" +
+      this.props.data.submitterID +
+      "&start=" +
+      this.props.data.startDate +
+      "&end=" +
+      this.props.data.endDate;
+
+    this.props.dispatch(queryByUser(url));
+  }
+
   componentWillMount() {
     this.props.dispatch(fetchUser());
   }
@@ -131,9 +152,48 @@ export default class Layout extends React.Component {
         return this.renderAllAgencies();
       case types.SINGLE_AGENCY_DATA:
         return this.renderByAgency();
+      case types.SUBMITTER_ID_DATA:
+        return this.renderByMovies();
       default:
         return <div />;
     }
+  }
+
+  renderByMovies() {
+    return (
+      <div>
+        <div class="row top-buffer">
+          <BootstrapTable
+            data={this.props.data.allAgencyData}
+            pagination={true}
+            exportCSV={false}
+            options={options}
+          >
+            <TableHeaderColumn dataField="key" isKey={true} hidden={true}>
+              Key
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="BillingModelID">
+              Billing Model ID
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="NewUsage">
+              New Usage
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="Productname">
+              Product Name
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="ReleaseDate">
+              Release Date
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="SubmitterName">
+              Relase Date
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="TotalUsage">
+              Total Usage
+            </TableHeaderColumn>
+          </BootstrapTable>
+        </div>
+      </div>
+    );
   }
 
   renderByAgency() {
@@ -301,6 +361,14 @@ export default class Layout extends React.Component {
                   />
                 </div>
                 <div class="row top-buffer">
+                  <FormControl
+                    class="col-sm-3"
+                    type="text"
+                    placeholder="Comma Separated Submitter IDs"
+                    onChange={this.handleSubmitterID}
+                  />
+                </div>
+                <div class="row top-buffer">
                   <span>
                     <ButtonToolbar>
                       <Button onClick={this.handleQueryAllAgencies}>
@@ -311,6 +379,9 @@ export default class Layout extends React.Component {
                       </Button>
                       <Button onClick={this.handleQueryByUserID}>
                         By User
+                      </Button>
+                      <Button onClick={this.handleQueryBySubmitterID}>
+                        By Movies
                       </Button>
                     </ButtonToolbar>
                   </span>
