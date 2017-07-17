@@ -22,6 +22,13 @@ export function setAgencyID(agencyID) {
   };
 }
 
+export function setUserID(userID) {
+  return {
+    type: action.SET_USER_ID,
+    payload: userID
+  };
+}
+
 export function queryAllAgencies(url) {
   return function(dispatch) {
     dispatch({ type: action.FETCHING_DATA });
@@ -47,6 +54,23 @@ export function queryByAgency(url) {
       .then(response => {
         dispatch({
           type: action.SINGLE_AGENCY_DATA,
+          payload: response.data.items
+        });
+      })
+      .catch(error => {
+        dispatch({ type: action.RECEIVED_ERROR, payload: error });
+      });
+  };
+}
+
+export function queryByUser(url) {
+  return function(dispatch) {
+    dispatch({ type: action.FETCHING_DATA });
+    axios
+      .get(url)
+      .then(response => {
+        dispatch({
+          type: action.SINGLE_USER_DATA,
           payload: response.data.items
         });
       })

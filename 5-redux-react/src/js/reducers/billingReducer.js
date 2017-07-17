@@ -5,6 +5,7 @@ export default function reducer(
     startDate: "",
     endDate: "",
     agencyID: "",
+    userID: "",
     allAgencyData: [],
     dataType: "",
     error: ""
@@ -24,6 +25,10 @@ export default function reducer(
       return { ...state, agencyID: action.payload };
     }
 
+    case types.SET_USER_ID: {
+      return { ...state, userID: action.payload };
+    }
+
     case types.ALL_AGENCIES_DATA: {
       return {
         ...state,
@@ -37,6 +42,14 @@ export default function reducer(
         ...state,
         allAgencyData: action.payload,
         dataType: types.SINGLE_AGENCY_DATA
+      };
+    }
+
+    case types.SINGLE_USER_DATA: {
+      return {
+        ...state,
+        allAgencyData: action.payload,
+        dataType: types.SINGLE_USER_DATA
       };
     }
 

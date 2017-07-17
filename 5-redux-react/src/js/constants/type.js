@@ -1,10 +1,11 @@
 export const SET_START_DATE = 'SET_START_DATE'
 export const SET_END_DATE = 'SET_END_DATE'
 export const SET_AGENCY_ID = 'SET_AGENCY_ID'
+export const SET_USER_ID = 'SET_USER_ID'
 
 export const RECEIVED_ERROR = 'RECEIVED_ERROR'
 export const FETCHING_DATA = 'FETCHING_DATA'
 
-
 export const ALL_AGENCIES_DATA = 'ALL_AGENCIES_DATA'
 export const SINGLE_AGENCY_DATA = 'SINGLE_AGENCY_DATA'
+export const SINGLE_USER_DATA = 'SINGLE_USER_DATA'

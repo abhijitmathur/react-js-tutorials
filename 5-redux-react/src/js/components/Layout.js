@@ -9,11 +9,19 @@ import {
   setStartDate,
   setEndDate,
   setAgencyID,
+  setUserID,
   queryAllAgencies,
-  queryByAgency
+  queryByAgency,
+  queryByUser
 } from "../actions/billingActions";
 
-import { FormGroup, ControlLabel, FormControl, Button } from "react-bootstrap";
+import {
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  Button,
+  ButtonToolbar
+} from "react-bootstrap";
 import * as types from "../constants/type";
 
 const options = {
@@ -50,11 +58,17 @@ export default class Layout extends React.Component {
     super(props);
     this.handleStartDate = this.handleStartDate.bind(this);
     this.handleEndDate = this.handleEndDate.bind(this);
+    
+    this.handleAgencyID = this.handleAgencyID.bind(this);
+    this.handleUserID = this.handleUserID.bind(this);
+
     this.handleQueryAllAgencies = this.handleQueryAllAgencies.bind(this);
+    
     this.renderRelevantData = this.renderRelevantData.bind(this);
     this.renderAllAgencies = this.renderAllAgencies.bind(this);
-    this.handleAgencyID = this.handleAgencyID.bind(this);
+    
     this.handleQueryByAgencyID = this.handleQueryByAgencyID.bind(this);
+    this.handleQueryByUserID = this.handleQueryByUserID.bind(this);
   }
 
   handleStartDate(e) {
@@ -66,8 +80,11 @@ export default class Layout extends React.Component {
   }
 
   handleAgencyID(e) {
-    // console.log(e.target.value);
     this.props.dispatch(setAgencyID(e.target.value));
+  }
+
+  handleUserID(e) {
+    this.props.dispatch(setUserID(e.target.value));
   }
 
   handleQueryAllAgencies() {
@@ -90,6 +107,18 @@ export default class Layout extends React.Component {
       this.props.data.endDate;
 
     this.props.dispatch(queryByAgency(url));
+  }
+
+  handleQueryByUserID() {
+    var url =
+      "http://localhost:8080/billing/user/" +
+      this.props.data.userID +
+      "?start=" +
+      this.props.data.startDate +
+      "&end=" +
+      this.props.data.endDate;
+
+    this.props.dispatch(queryByUser(url));
   }
 
   componentWillMount() {
@@ -163,7 +192,6 @@ export default class Layout extends React.Component {
               Submitter Name
             </TableHeaderColumn>
           </BootstrapTable>
-
         </div>
       </div>
     );
@@ -227,9 +255,7 @@ export default class Layout extends React.Component {
             <TableHeaderColumn dataField="submitterName">
               Submitter Name
             </TableHeaderColumn>
-
           </BootstrapTable>
-
         </div>
       </div>
     );
@@ -267,18 +293,26 @@ export default class Layout extends React.Component {
                   />
                 </div>
                 <div class="row top-buffer">
+                  <FormControl
+                    class="col-sm-3"
+                    type="text"
+                    placeholder="User ID"
+                    onChange={this.handleUserID}
+                  />
+                </div>
+                <div class="row top-buffer">
                   <span>
-                    <div class="col-sm-2">
+                    <ButtonToolbar>
                       <Button onClick={this.handleQueryAllAgencies}>
                         All Agencies
                       </Button>
-                    </div>
-                    <div class="col-sm-1" />
-                    <div class="col-sm-2">
                       <Button onClick={this.handleQueryByAgencyID}>
                         By Agency
                       </Button>
-                    </div>
+                      <Button onClick={this.handleQueryByUserID}>
+                        By User
+                      </Button>
+                    </ButtonToolbar>
                   </span>
                 </div>
               </FormGroup>
